@@ -5,8 +5,10 @@
 joint_cards_20200606：
  - test_images: 包含测试图片、测试txt以及测试结果图
  - joint_cards.py: JointCards类
- - demo.py: 示例文件
- - 运行：`python3 demo.py --txt xx/test_images/test_1.txt --image xx/test_images/test_1.jpg`
+ - demo.py: 示例脚本
+
+# Demo使用方式
+`python3 demo.py --txt xx/test_images/test_1.txt --image xx/test_images/test_1.jpg`
 
 # test case
 对于"test_1.txt":
