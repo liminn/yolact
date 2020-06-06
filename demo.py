@@ -41,7 +41,7 @@ def visulaize_results(image_path, bbox_infos, box_cluster):
 
 if __name__ == "__main__":
     """
-    python3 demo.py --txt /home/dell/zhanglimin/code/pipline/dl_modular_pipeline/joint_cards_20200606/test_images/test_1.txt --image /home/dell/zhanglimin/code/pipline/dl_modular_pipeline/joint_cards_20200606/test_images/test_1.jpg
+    python3 demo.py --txt xx/test_images/test_1.txt --image xx/test_images/test_1.jpg
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('--txt', type=str, help='path to txt')
