@@ -1,46 +1,51 @@
-# 说明
-该仓库代码，针对用于牛听听的卡片字符拼接
+# Joint Card
+This repo is for the task of joint cards
 
-# 文件结构
+# Prerequisites
+- numpy
+- opencv
+
+# File structure
 joint_cards_20200606：
- - test_images: 包含测试图片、测试txt以及测试结果图
- - joint_cards.py: JointCards类
- - demo.py: 示例脚本
+ - test_images: contains test images, test txts and test results
+ - joint_cards.py: the script that defines the JointCards class
+ - demo.py: demo script
 
-# Demo使用方式
+# Usage of Demo
+run:
 `python3 demo.py --txt xx/test_images/test_1.txt --image xx/test_images/test_1.jpg`
 
-# test case
-对于"test_1.txt":
-- 输出：[[0, 1], [2, 3]]
+# Test cases
+for `python3 demo.py --txt xx/test_images/test_1.txt --image xx/test_images/test_1.jpg`
+- output: [[0, 1], [2, 3]]
 
-对于"test_2.txt":
-- 输出：[[0, 1, 2, 3, 4]]
+for `python3 demo.py --txt xx/test_images/test_2.txt --image xx/test_images/test_2.jpg`
+- output: [[0, 1, 2, 3, 4]]
 
-对于"test_3.txt":
-- 输出：[[2], [0, 1], [4, 5], [3]]
+for `python3 demo.py --txt xx/test_images/test_3.txt --image xx/test_images/test_3.jpg`
+- output: [[2], [0, 1], [4, 5], [3]]
 
-对于"test_4.txt":
-- 输出：[[2, 3], [1, 0]]
+for `python3 demo.py --txt xx/test_images/test_4.txt --image xx/test_images/test_4.jpg`
+- output: [[2, 3], [1, 0]]
 
-对于"test_5.txt":
-- 输出：[[0], [1, 2]]
+for `python3 demo.py --txt xx/test_images/test_5.txt --image xx/test_images/test_5.jpg`
+- output: [[0], [1, 2]]
 
-对于"test_6.txt":
-- 输出：[[0, 1], [2]]
+for `python3 demo.py --txt xx/test_images/test_6.txt --image xx/test_images/test_6.jpg`
+- output: [[0, 1], [2]]
 
-对于"test_7.txt":
-- 输出：[[0], [2, 1]]
+for `python3 demo.py --txt xx/test_images/test_7.txt --image xx/test_images/test_7.jpg`
+- output: [[0], [2, 1]]
 
-对于"test_8.txt":
-- 输出：[[0, 1]]
+for `python3 demo.py --txt xx/test_images/test_8.txt --image xx/test_images/test_8.jpg`
+- output: [[0, 1]]
 
-对于"test_9.txt":
-- 输出：[[0], [1]]
+for `python3 demo.py --txt xx/test_images/test_9.txt --image xx/test_images/test_9.jpg`
+- output: [[0], [1]]
 
-对于"test_10.txt":
-- 输出：[[0], [2, 1], [3]]
+for `python3 demo.py --txt xx/test_images/test_10.txt --image xx/test_images/test_10.jpg`
+- output: [[0], [2, 1], [3]]
 
-对于"test_11.txt":
-- 输出：[[4, 3, 2, 1, 0]]
+for `python3 demo.py --txt xx/test_images/test_11.txt --image xx/test_images/test_11.jpg`
+- output: [[4, 3, 2, 1, 0]]
 
