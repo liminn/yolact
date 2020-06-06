@@ -1,4 +1,4 @@
-# Joint Card
+# Joint Cards
 This repo is for the task of joint cards
 
 # Prerequisites
