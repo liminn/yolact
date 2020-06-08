@@ -306,6 +306,6 @@ def get_results(bbox_info):
     # 4.获取分区的矩形框
     cluster_rectangle = get_cluster_rectangle(bbox_info, cluster_index)
     # 5.定义整体返回结果
-    cluster_dict = {"index": cluster_index, "rectangle":cluster_rectangle, "text": cluster_text }
+    cluster_dict = {"index": cluster_index, "bbox":cluster_rectangle, "text": cluster_text }
     return cluster_dict
     

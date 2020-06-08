@@ -60,4 +60,4 @@ if __name__ == "__main__":
         joint_dict = get_results(bbox_infos)
         print("input: {}\noutput: {}\n".format(os.path.basename(txt_path), joint_dict))
         # 3.可视化拼接结果：在原图上，绘制出各区域的矩形框
-        visulaize_results(image_path, joint_dict["rectangle"])
+        visulaize_results(image_path, joint_dict["bbox"])
