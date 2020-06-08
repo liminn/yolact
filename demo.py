@@ -3,9 +3,10 @@
 import os
 import sys
 import cv2
+import glob
 import random
 import argparse
-from joint_cards import JointCards
+from joint_cards import get_results
 
 def get_bbox_info(txt_path):
     f = open(txt_path)
@@ -25,36 +26,38 @@ def get_bbox_info(txt_path):
         bbox_infos.append([char, x1, y1, x2, y2, x3, y3, x4, y4])
     return bbox_infos
 
-def visulaize_results(image_path, bbox_infos, box_cluster):
+def visulaize_results(image_path, cluster_rectangle):
     image = cv2.imread(image_path)
-    for i in range(len(box_cluster)):
-        cluster_list = box_cluster[i]
+    for i in range(len(cluster_rectangle)):
+        rectangle = cluster_rectangle[i]
+        left_top = (rectangle[0],rectangle[1])
+        right_bottom = (rectangle[4],rectangle[5])
         random_color = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
-        for j in range(len(cluster_list)):
-            bbox_info = bbox_infos[cluster_list[j]]
-            x1, y1, x2, y2, x3, y3, x4, y4 = bbox_info[1:]
-            image = cv2.rectangle(image, (int(x1), int(y1)), (int(x3), int(y3)), random_color, 3)
+        image = cv2.rectangle(image, left_top, right_bottom, random_color, 3)
     path, base_name = os.path.split(image_path)
     save_path = os.path.join(path, base_name.split(".jpg")[0]+"_result.jpg")
     cv2.imwrite(save_path, image)
 
-
 if __name__ == "__main__":
     """
-    python3 demo.py --txt xx/test_images/test_1.txt --image xx/test_images/test_1.jpg
+    Usage: python3 demo.py --path xx/test_resources
     """
+    # 获取测试资源路径
     parser = argparse.ArgumentParser()
-    parser.add_argument('--txt', type=str, help='path to txt')
-    parser.add_argument('--image', type=str, help='path to image')
+    parser.add_argument('--path', type=str, help='path to test resources')
     args = parser.parse_args()
-    
-    '''1.输入数据格式：[[char, x1, y1, x2, y2, x3, y3, x4, y4],[]...,[]]'''
-    bbox_infos = get_bbox_info(args.txt)
-    '''2.实例化JointCards类'''
-    J = JointCards(bbox_infos)
-    '''3.获取卡片聚类结果'''
-    box_cluster = J.get_results()
-    '''4.输出数据格式：[[0, 1], [2, 3]]'''
-    print(box_cluster)
-    '''5.可视化结果'''
-    visulaize_results(args.image, bbox_infos, box_cluster)
+    test_resource = args.path
+    txt_paths = glob.glob(os.path.join(test_resource,"*.txt"))
+    txt_paths.sort(reverse = False)
+
+    # 遍历所有的测试txt文件，逐个进行拼接
+    for i in range(len(txt_paths)):
+        txt_path = txt_paths[i]
+        image_path = txt_path.split(".txt")[0]+".jpg"
+        # 1.制作标准输入数据格式：[[char, x1, y1, x2, y2, x3, y3, x4, y4],[]...,[]]'''
+        bbox_infos = get_bbox_info(txt_path)
+        # 2.获取拼接结果：{'index': [[0], [1, 2]], 'rectangle': [[583, 233, 737, 233, 737, 354, 583, 354], [546, 389, 811, 389, 811, 468, 546, 468]], 'text': ['h', 'Zb']}
+        joint_dict = get_results(bbox_infos)
+        print("input: {}\noutput: {}\n".format(os.path.basename(txt_path), joint_dict))
+        # 3.可视化拼接结果：在原图上，绘制出各区域的矩形框
+        visulaize_results(image_path, joint_dict["rectangle"])
