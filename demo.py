@@ -54,7 +54,7 @@ if __name__ == "__main__":
     for i in range(len(txt_paths)):
         txt_path = txt_paths[i]
         image_path = txt_path.split(".txt")[0]+".jpg"
-        # 1.制作标准输入数据格式：[[char, x1, y1, x2, y2, x3, y3, x4, y4],[]...,[]]'''
+        # 1.制作标准输入数据格式：[[char, x1, y1, x2, y2, x3, y3, x4, y4],[]...,[]]
         bbox_infos = get_bbox_info(txt_path)
         # 2.获取拼接结果：{'index': [[0], [1, 2]], 'rectangle': [[583, 233, 737, 233, 737, 354, 583, 354], [546, 389, 811, 389, 811, 468, 546, 468]], 'text': ['h', 'Zb']}
         joint_dict = get_results(bbox_infos)
