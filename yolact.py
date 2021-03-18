@@ -400,7 +400,7 @@ class Yolact(nn.Module):
         super().__init__()
 
         self.backbone = construct_backbone(cfg.backbone)
-
+        
         if cfg.freeze_bn:
             self.freeze_bn()
 
@@ -423,7 +423,7 @@ class Yolact(nn.Module):
 
             # The include_last_relu=false here is because we might want to change it to another function
             self.proto_net, cfg.mask_dim = make_net(in_channels, cfg.mask_proto_net, include_last_relu=False)
-
+            
             if cfg.mask_proto_bias:
                 cfg.mask_dim += 1
 
@@ -473,7 +473,7 @@ class Yolact(nn.Module):
     def save_weights(self, path):
         """ Saves the model's weights using compression because the file sizes were getting too big. """
         torch.save(self.state_dict(), path)
-    
+
     def load_weights(self, path):
         """ Loads weights from a compressed save file. """
         state_dict = torch.load(path)
@@ -575,7 +575,7 @@ class Yolact(nn.Module):
                 # Use backbone.selected_layers because we overwrote self.selected_layers
                 outs = [outs[i] for i in cfg.backbone.selected_layers]
                 outs = self.fpn(outs)
-
+    
         proto_out = None
         if cfg.mask_type == mask_type.lincomb and cfg.eval_mask_branch:
             with timer.env('proto'):

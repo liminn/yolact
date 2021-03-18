@@ -245,7 +245,7 @@ def train():
     
     # Which learning rate adjustment step are we on? lr' = lr * gamma ^ step_index
     step_index = 0
-
+    
     data_loader = data.DataLoader(dataset, args.batch_size,
                                   num_workers=args.num_workers,
                                   shuffle=True, collate_fn=detection_collate,

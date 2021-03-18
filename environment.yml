@@ -25,8 +25,8 @@ dependencies:
   - unzip # to download COCO dataset
   - conda-forge::bash # to download COCO dataset
   - pip:
-    - opencv-python 
+    - opencv-python # 4.5.1.48, low version will case bug: https://github.com/dbolya/yolact/issues/421
     - pillow <7.0 # bug PILLOW_VERSION in torchvision, must be < 7.0 until torchvision is upgraded
     - pycocotools 
     - PyQt5 # needed on KDE/Qt envs for matplotlib
-
+  

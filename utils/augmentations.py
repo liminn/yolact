@@ -146,7 +146,9 @@ class Resize(object):
         img_h, img_w, _ = image.shape
         
         if self.preserve_aspect_ratio:
+            #print("origin w/h,",img_w,img_h)
             width, height = Resize.calc_size_preserve_ar(img_w, img_h, self.max_size)
+            #print("res w/h,",width,height)
         else:
             width, height = self.max_size, self.max_size
 
@@ -635,6 +637,7 @@ class FastBaseTransform(torch.nn.Module):
         if cfg.preserve_aspect_ratio:
             _, h, w, _ = img.size()
             img_size = Resize.calc_size_preserve_ar(w, h, cfg.max_size)
+            print(img_size[1], img_size[0])
             img_size = (img_size[1], img_size[0]) # Pytorch needs h, w
         else:
             img_size = (cfg.max_size, cfg.max_size)

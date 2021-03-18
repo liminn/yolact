@@ -33,6 +33,9 @@ class COCOAnnotationTransform(object):
             a list containing lists of bounding boxes  [bbox coords, class idx]
         """
         scale = np.array([width, height, width, height])
+        # target对应一副图像的所有anotation的dict，[{},...,{}]
+        # 该函数对于bbox实现从[x,y,h,w]->[xmin,ymin,xmax,ymax]
+        # res存储所有bbox的信息,[[xmin, ymin, xmax, ymax, label_idx],...,[]]
         res = []
         for obj in target:
             if 'bbox' in obj:
@@ -42,7 +45,7 @@ class COCOAnnotationTransform(object):
                     label_idx = self.label_map[label_idx] - 1
                 final_box = list(np.array([bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3]])/scale)
                 final_box.append(label_idx)
-                res += [final_box]  # [xmin, ymin, xmax, ymax, label_idx]
+                res += [final_box]  # [[xmin, ymin, xmax, ymax, label_idx],...,]
             else:
                 print("No bbox found for object ", obj)
 
@@ -60,7 +63,7 @@ class COCODetection(data.Dataset):
         in the target (bbox) and transforms it.
         prep_crowds (bool): Whether or not to prepare crowds for the evaluation step.
     """
-    
+
     def __init__(self, image_path, info_file, transform=None,
                  target_transform=None,
                  dataset_name='MS COCO', has_gt=True):
@@ -73,6 +76,7 @@ class COCODetection(data.Dataset):
         self.root = image_path
         self.coco = COCO(info_file)
         
+        # coco.imgToAnns.keys():数据集中有GT对应的图像样本的id号（用来过滤没有标签的样本）
         self.ids = list(self.coco.imgToAnns.keys())
         if len(self.ids) == 0 or not has_gt:
             self.ids = list(self.coco.imgs.keys())
@@ -109,13 +113,16 @@ class COCODetection(data.Dataset):
         img_id = self.ids[index]
 
         if self.has_gt:
+            # coco.getAnnIds() 根据id号，获得该图像对应的GT的id号
             ann_ids = self.coco.getAnnIds(imgIds=img_id)
 
+            # coco.loadAnns() 根据 Annotation id号，导入标签信息
             # Target has {'segmentation', 'area', iscrowd', 'image_id', 'bbox', 'category_id'}
+            # 这里，target包含图片中所有aanotation的dict信息，[{},{},...,{}]
             target = [x for x in self.coco.loadAnns(ann_ids) if x['image_id'] == img_id]
         else:
             target = []
-        
+
         # Separate out crowd annotations. These are annotations that signify a large crowd of
         # objects of said class, where there is no annotation for each individual object. Both
         # during testing and training, consider these crowds as neutral.
@@ -132,6 +139,7 @@ class COCODetection(data.Dataset):
         # The split here is to have compatibility with both COCO2014 and 2017 annotations.
         # In 2014, images have the pattern COCO_{train/val}2014_%012d.jpg, while in 2017 it's %012d.jpg.
         # Our script downloads the images as %012d.jpg so convert accordingly.
+        # coco.loadImgs()根据id号，导入对应的图像信息
         file_name = self.coco.loadImgs(img_id)[0]['file_name']
         
         if file_name.startswith('COCO'):
@@ -150,14 +158,17 @@ class COCODetection(data.Dataset):
             masks = masks.reshape(-1, height, width)
 
         if self.target_transform is not None and len(target) > 0:
+            # 这里target变成了bbox的左边和类别信息：[[xmin, ymin, xmax, ymax, label_idx],...,[]]
             target = self.target_transform(target, width, height)
 
+        # 调用SSDAugmentation，对图像进行处理
         if self.transform is not None:
             if len(target) > 0:
                 target = np.array(target)
+                # 疑问：这里的target不是[{},{}]形式？
                 img, masks, boxes, labels = self.transform(img, masks, target[:, :4],
                     {'num_crowds': num_crowds, 'labels': target[:, 4]})
-            
+                
                 # I stored num_crowds in labels so I didn't have to modify the entirety of augmentations
                 num_crowds = labels['num_crowds']
                 labels     = labels['labels']
@@ -189,7 +200,7 @@ class COCODetection(data.Dataset):
         img_id = self.ids[index]
         path = self.coco.loadImgs(img_id)[0]['file_name']
         return cv2.imread(osp.join(self.root, path), cv2.IMREAD_COLOR)
-        
+
     def pull_anno(self, index):
         '''Returns the original annotation of image at index
 

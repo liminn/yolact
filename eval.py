@@ -117,7 +117,7 @@ def parse_args(argv=None):
     parser.set_defaults(no_bar=False, display=False, resume=False, output_coco_json=False, output_web_json=False, shuffle=False,
                         benchmark=False, no_sort=False, no_hash=False, mask_proto_debug=False, crop=True, detect=False, display_fps=False,
                         emulate_playback=False)
-
+    
     global args
     args = parser.parse_args(argv)
 

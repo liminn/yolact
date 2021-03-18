@@ -63,7 +63,7 @@ class Detect(object):
         with timer.env('Detect'):
             batch_size = loc_data.size(0)
             num_priors = prior_data.size(0)
-
+            
             conf_preds = conf_data.view(batch_size, num_priors, self.num_classes).transpose(2, 1).contiguous()
 
             for batch_idx in range(batch_size):

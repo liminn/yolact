@@ -133,7 +133,7 @@ coco2014_dataset = dataset_base.copy({
     
     'train_info': './data/coco/annotations/instances_train2014.json',
     'valid_info': './data/coco/annotations/instances_val2014.json',
-    
+
     'label_map': COCO_LABEL_MAP
 })
 
@@ -172,7 +172,7 @@ pascal_sbd_dataset = dataset_base.copy({
     'class_names': PASCAL_CLASSES,
 })
 
-### custom card dataset
+# custom dataset
 card_dataset = dataset_base.copy({
     'name': 'card dataset',
 
@@ -185,32 +185,6 @@ card_dataset = dataset_base.copy({
     'class_names': ("card",),
     #'class_names': ("card"),  # 错误！
 })
-
-### custom card dataset
-circle_dataset = dataset_base.copy({
-    'name': 'circle dataset',
-    
-    # 'train_images': "/media/dell/6e8a7942-5a27-4e56-bffe-1af5a12aabb4/data/画圈游戏/生成数据/0_image_synthetic_rle_20210120",
-    # 'valid_images': "/media/dell/6e8a7942-5a27-4e56-bffe-1af5a12aabb4/data/画圈游戏/生成数据/0_image_synthetic_rle_20210120",
-    # 'train_info': "/media/dell/6e8a7942-5a27-4e56-bffe-1af5a12aabb4/data/画圈游戏/生成数据/coco_instance_rle_20210120.json",
-    # 'valid_info': "/media/dell/6e8a7942-5a27-4e56-bffe-1af5a12aabb4/data/画圈游戏/生成数据/coco_instance_rle_20210120.json",
-    
-    'train_images': "/media/dell/6e8a7942-5a27-4e56-bffe-1af5a12aabb4/data/画圈游戏/train_0/20210205_thickness7_train",
-    'train_info': "/media/dell/6e8a7942-5a27-4e56-bffe-1af5a12aabb4/data/画圈游戏/train_0/20210205_thickness7_train.json",
-    'valid_images': "/media/dell/6e8a7942-5a27-4e56-bffe-1af5a12aabb4/data/画圈游戏/test_0/20210205_thickness7_test",
-    'valid_info': "/media/dell/6e8a7942-5a27-4e56-bffe-1af5a12aabb4/data/画圈游戏/test_0/20210205_thickness7_test.json",
-    
-    #'train_images': "/media/dell/6e8a7942-5a27-4e56-bffe-1af5a12aabb4/data/画圈游戏/train_0/20210108_1260_image_train_20210127",
-    #'train_info': "/media/dell/6e8a7942-5a27-4e56-bffe-1af5a12aabb4/data/画圈游戏/train_0/coco_instance_20210108_1260_image_train_20210127.json",
-    #'valid_images': "/media/dell/6e8a7942-5a27-4e56-bffe-1af5a12aabb4/data/画圈游戏/test_0/20210122_504_image_test",
-    #'valid_info': "/media/dell/6e8a7942-5a27-4e56-bffe-1af5a12aabb4/data/画圈游戏/test_0/coco_instance_20210122_504_image_test.json",
-    
-    'class_names': ("circle",),
-    #'class_names': ("circle"),  # 错误！
-})
-
-
-
 
 
 # ----------------------- TRANSFORMS ----------------------- #
@@ -424,7 +398,7 @@ activation_func = Config({
 fpn_base = Config({
     # The number of features to have in each FPN layer
     'num_features': 256,
-
+    
     # The upsampling mode used
     'interpolation_mode': 'bilinear',
 
@@ -454,7 +428,7 @@ fpn_base = Config({
 coco_base_config = Config({
     'dataset': coco2014_dataset,
     'num_classes': 81, # This should include the background class
-
+    
     'max_iter': 400000,
 
     # The maximum number of detections for evaluation
@@ -464,7 +438,7 @@ coco_base_config = Config({
     'lr': 1e-3,
     'momentum': 0.9,
     'decay': 5e-4,
-
+    
     # For each lr step, what to multiply the lr with
     'gamma': 0.1,
     'lr_steps': (280000, 360000, 400000),
@@ -479,7 +453,7 @@ coco_base_config = Config({
     'conf_alpha': 1,
     'bbox_alpha': 1.5,
     'mask_alpha': 0.4 / 256 * 140 * 140, # Some funky equation. Don't worry about it.
-
+    
     # Eval.py sets this if you just want to run YOLACT as a detector
     'eval_mask_branch': True,
 
@@ -488,7 +462,7 @@ coco_base_config = Config({
     # Examples with confidence less than this are not considered by NMS
     'nms_conf_thresh': 0.05,
     # Boxes with IoU overlap greater than this threshold will be culled during NMS
-    'nms_thresh': 0.5, #0.3, 
+    'nms_thresh': 0.5,
     
     # See mask_type for details.
     'mask_type': mask_type.direct,
@@ -520,21 +494,21 @@ coco_base_config = Config({
     'mask_proto_double_loss_alpha': 1,
     'mask_proto_split_prototypes_by_head': False,
     'mask_proto_crop_with_pred_box': False,
-    
+
     # SSD data augmentation parameters
     # Randomize hue, vibrance, etc.
     'augment_photometric_distort': True,
     # Have a chance to scale down the image and pad (to emulate smaller detections)
-    'augment_expand': False, #True,  
+    'augment_expand': True,
     # Potentialy sample a random crop from the image and put it in a random place
     'augment_random_sample_crop': True,
     # Mirror the image with a probability of 1/2
     'augment_random_mirror': True,
     # Flip the image vertically with a probability of 1/2
-    'augment_random_flip': False,
+    'augment_random_flip': True,
     # With uniform probability, rotate the image [0,90,180,270] degrees
-    'augment_random_rot90': False,
-    
+    'augment_random_rot90': True,
+
     # Discard detections with width and height smaller than this (in absolute width and height)
     'discard_box_width': 4 / 550,
     'discard_box_height': 4 / 550,
@@ -584,7 +558,7 @@ coco_base_config = Config({
     # Adds another branch to the netwok to predict Mask IoU.
     'use_mask_scoring': False,
     'mask_scoring_alpha': 1,
-
+    
     # Match gt boxes using the Box2Pix change metric instead of the standard IoU metric.
     # Note that the threshold you set for iou_threshold should be negative with this setting on.
     'use_change_matching': False,
@@ -643,7 +617,7 @@ coco_base_config = Config({
     # If True, this will resize all images to be max_size^2 pixels in area while keeping aspect ratio.
     # If False, all images are resized to max_size x max_size
     'preserve_aspect_ratio': False,
-    
+
     # Whether or not to use the prediction module (c) from DSSD
     'use_prediction_module': False,
 
@@ -677,7 +651,7 @@ coco_base_config = Config({
 
     # Discard predicted masks whose area is less than this
     'discard_mask_area': -1,
-    
+
     'maskiou_alpha': 1.0,
     'rescore_mask': False,
     'rescore_bbox': False,
@@ -689,33 +663,24 @@ coco_base_config = Config({
 
 
 # ----------------------- YOLACT v1.0 CONFIGS ----------------------- #
-
+temp = len(card_dataset.class_names)
 yolact_base_config = coco_base_config.copy({
     'name': 'yolact_base',
 
     # Dataset stuff
     #'dataset': coco2017_dataset,
     #'num_classes': len(coco2017_dataset.class_names) + 1,
-    #'dataset': card_dataset,
-    #'num_classes': len(card_dataset.class_names) + 1,
-    'dataset': circle_dataset,
-    'num_classes': len(circle_dataset.class_names) + 1,
+    'dataset': card_dataset,
+    'num_classes': len(card_dataset.class_names) + 1,
     
-
     # Image Size
     'max_size': 550,
     
     # Training params
-    #'lr_steps': (280000, 600000, 700000, 750000),
-    #'max_iter': 800000,
-    #'lr_steps': (35000, 70000, 80000, 90000),
-    #'max_iter': 100000,
-    #'lr_steps': (8000, 13000, 18000, 21000),
-    #'max_iter': 25000,
-    'lr_steps': (10000, 15000, 20000, 25000),
-    'max_iter': 30000,
-    # 'lr_steps': (5000, 8000, 10000, 13000), # 40, 60, 80, 100
-    # 'max_iter': 15000,   # 
+    # 'lr_steps': (280000, 600000, 700000, 750000),
+    # 'max_iter': 800000,
+    'lr_steps': (35000, 70000, 80000, 90000),
+    'max_iter': 100000,
     
     # Backbone Settings
     'backbone': resnet101_backbone.copy({
@@ -723,7 +688,7 @@ yolact_base_config = coco_base_config.copy({
         'use_pixel_scales': True,
         'preapply_sqrt': False,
         'use_square_anchors': True, # This is for backward compatability with a bug
-
+        
         'pred_aspect_ratios': [ [[1, 1/2, 2]] ]*5,
         'pred_scales': [[24], [48], [96], [192], [384]],
     }),
@@ -744,12 +709,12 @@ yolact_base_config = coco_base_config.copy({
     # Other stuff
     'share_prediction_module': True,
     'extra_head_net': [(256, 3, {'padding': 1})],
-    
-    'positive_iou_threshold': 0.6, #0.5,
-    'negative_iou_threshold': 0.5, # 0.5可以提高box_map和mask_map，但边框边缘的mask分割效果不好，不知道为啥，因此改回0.4
-    
+
+    'positive_iou_threshold': 0.5,
+    'negative_iou_threshold': 0.4,
+
     'crowd_iou_threshold': 0.7,
-    
+
     'use_semantic_segmentation_loss': True,
 })
 
@@ -826,7 +791,9 @@ yolact_plus_base_config = yolact_base_config.copy({
         'selected_layers': list(range(1, 4)),
         
         'pred_aspect_ratios': [ [[1, 1/2, 2]] ]*5,
-        'pred_scales': [[i * 2 ** (j / 3.0) for j in range(3)] for i in [24, 48, 96, 192, 384]],
+        #'pred_scales': [[i * 2 ** (j / 3.0) for j in range(3)] for i in [24, 48, 96, 192, 384]],
+        #'pred_aspect_ratios': [ [[1, 1/2, 2]],  [[1, 1/2, 2]], [[1, 1/2, 2]], [[1, 1, 1]], [[1, 1, 1]]],
+        'pred_scales': [[i * 2 ** (j / 3.0) for j in range(3)] for i in [24, 50, 76, 102, 128]],
         'use_pixel_scales': True,
         'preapply_sqrt': False,
         'use_square_anchors': False,
@@ -838,7 +805,7 @@ yolact_plus_base_config = yolact_base_config.copy({
     'rescore_bbox': False,
     'rescore_mask': True,
 
-    'discard_mask_area': -1, #5*5,
+    'discard_mask_area': 5*5,
 })
 
 yolact_plus_resnet50_config = yolact_plus_base_config.copy({
@@ -859,6 +826,8 @@ yolact_plus_resnet50_config = yolact_plus_base_config.copy({
 # Default config
 #cfg = yolact_base_config.copy()
 cfg = yolact_plus_base_config.copy()
+
+nclass = cfg.num_classes
 
 def set_cfg(config_name:str):
     """ Sets the active config. Works even if cfg is already imported! """

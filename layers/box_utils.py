@@ -183,6 +183,7 @@ def match(pos_thresh, neg_thresh, truths, priors, labels, crowd_boxes, loc_t, co
     # Size [num_priors] best ground truth for each prior
     best_truth_overlap, best_truth_idx = overlaps.max(0)
 
+    #"""
     # We want to ensure that each gt gets used at least once so that we don't
     # waste any training data. In order to do that, find the max overlap anchor
     # with each gt, and force that anchor to use that gt.
@@ -205,13 +206,14 @@ def match(pos_thresh, neg_thresh, truths, priors, labels, crowd_boxes, loc_t, co
         best_truth_overlap[i] = 2
         # Set the gt to be used for i to be j, overwriting whatever was there
         best_truth_idx[i] = j
-
+    #"""
+    
     matches = truths[best_truth_idx]            # Shape: [num_priors,4]
     conf = labels[best_truth_idx] + 1           # Shape: [num_priors]
-
+    
     conf[best_truth_overlap < pos_thresh] = -1  # label as neutral
     conf[best_truth_overlap < neg_thresh] =  0  # label as background
-
+    
     # Deal with crowd annotations for COCO
     if crowd_boxes is not None and cfg.crowd_iou_threshold < 1:
         # Size [num_priors, num_crowds]
@@ -308,7 +310,7 @@ def decode(loc, priors, use_yolo_regressors:bool=False):
             priors[:, 2:] * torch.exp(loc[:, 2:] * variances[1])), 1)
         boxes[:, :2] -= boxes[:, 2:] / 2
         boxes[:, 2:] += boxes[:, :2]
-    
+        
     return boxes
 
 

@@ -211,7 +211,7 @@ class MultiBoxLoss(nn.Module):
         #  - E: Class Existence Loss
         #  - S: Semantic Segmentation Loss
         return losses
-
+        
     def class_existence_loss(self, class_data, class_existence_t):
         return cfg.class_existence_alpha * F.binary_cross_entropy_with_logits(class_data, class_existence_t, reduction='sum')
 
