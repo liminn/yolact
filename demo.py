@@ -26,18 +26,24 @@ def get_bbox_info(txt_path):
         bbox_infos.append([char, x1, y1, x2, y2, x3, y3, x4, y4])
     return bbox_infos
 
-def visulaize_results(image_path, cluster_rectangle):
+def visulaize_results(image_path, cluster_rectangle, cluster_texts):
     image = cv2.imread(image_path)
     for i in range(len(cluster_rectangle)):
         rectangle = cluster_rectangle[i]
+        text = cluster_texts[i]
         left_top = (rectangle[0],rectangle[1])
         right_bottom = (rectangle[4],rectangle[5])
         random_color = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
         image = cv2.rectangle(image, left_top, right_bottom, random_color, 3)
+        cv2.putText(image, "Text: " + str(text), (int(20), int((i+1)*50)), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+        if(len(text)>9):
+            cv2.putText(image, "Location: " + str(rectangle), (int(300), int((i+1)*50)), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+        else:
+            cv2.putText(image, "Location: " + str(rectangle), (int(200), int((i+1)*50)), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
     path, base_name = os.path.split(image_path)
     save_path = os.path.join(path, base_name.split(".jpg")[0]+"_result.jpg")
     cv2.imwrite(save_path, image)
-
+    
 if __name__ == "__main__":
     """
     Usage: python3 demo.py --path xx/test_resources
@@ -60,4 +66,4 @@ if __name__ == "__main__":
         joint_dict = get_results(bbox_infos)
         print("input: {}\noutput: {}\n".format(os.path.basename(txt_path), joint_dict))
         # 3.可视化拼接结果：在原图上，绘制出各区域的矩形框
-        visulaize_results(image_path, joint_dict["bbox"])
+        visulaize_results(image_path, joint_dict["bbox"], joint_dict["text"])
